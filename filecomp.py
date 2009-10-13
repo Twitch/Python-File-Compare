@@ -1,4 +1,4 @@
-#!/usr/bin/python env
+#!/usr/bin/env python
 import os,sys,hashlib
 
 """
@@ -69,7 +69,9 @@ def comfiles(files, onedir, twodir):
         secdir[f] = md5sum(sf)
     for x in firstdir:
         if firstdir[x] != secdir[x]:
-            print "File %s does not match!" % X"#######################################"
+            print "File %s does not match!" % x
+
+print "#######################################"
 print "Comparing \n%s \n%s" % (onedir, twodir)
 print "#######################################"
 
