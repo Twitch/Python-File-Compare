@@ -1,0 +1,14 @@
+/*********************************\
+           filecomp.py
+     Will compare files in two
+      directories for missing
+      and/or mismatched files
+       (based upon md5sums).
+
+      Currently a bit sloppy
+       and lacks recursion.
+
+     Written by Benjamin.Sauls
+\*********************************/
+
+This is a very small, as of yet, utility to compare the contents of a pair of directories. This became necessary when managing archived files with their originals and is likely quite useful for managing files/data across multiple systems (without using something overly complex like git/svn/cvs).
