@@ -13,5 +13,4 @@
 
 This is a very small, as of yet, utility to compare the contents of a pair of directories. This became necessary when managing archived files with their originals and is likely quite useful for managing files/data across multiple systems (without using something overly complex like git/svn/cvs).
 
-This currently does not recurse through any directories found within the 
-targets. 
+Recursion is now in place, though not exceedingly well tested.
