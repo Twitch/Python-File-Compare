@@ -68,6 +68,12 @@ def complists(dir1, dir2):
     likedirectories = set(dirsa).intersection(set(dirsb))
     
     ''' Compare files and display disparities. '''
+    dira = []
+    dirb = []
+    for file in os.listdir(dir1):
+        dira.append(file)
+    for file in os.listdir(dir2):
+        dirb.append(file)
     indir1 = set(dira).difference(set(dirb))
     indir2 = set(dirb).difference(set(dira))
     return (indir1, indir2, set(dira).intersection(set(dirb)))
