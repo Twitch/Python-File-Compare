@@ -47,13 +47,31 @@ def md5sum(fname):
     return ret
 
 def complists(dir1, dir2):
-    dira = []
-    dirb = []
+    dirsa = {}
+    dirsb = {}
     ''' List files in target directories. '''
-    for file in os.listdir(dir1):
-        dira.append(file)
-    for file in os.listdir(dir2):
-        dirb.append(file)
+    for directory in os.walk(onedir):
+        fileindir = []
+        for file in directory:
+            fileindir.append(file)
+        dirsa[directory[0]] = fileindir
+    
+    for directory in os.walk(twodir):
+        fileindir = []
+        for file in directory:
+            fileindir.append(file)
+        dirsb[directory[0]] = fileindir
+    """
+    Trying to make recursion happen. So far, to no avail.
+    """
+    print dirsa.keys()
+
+    print set(dirsa.keys()).intersection(set(dirsb.keys()))
+    
+    exit(0)
+    dirsin1 = set(path1[1]).difference(set(path2[1]))
+    print dirsin1
+    exit(0)
     ''' Compare files and display disparities. '''
     indir1 = set(dira).difference(set(dirb))
     indir2 = set(dirb).difference(set(dira))
