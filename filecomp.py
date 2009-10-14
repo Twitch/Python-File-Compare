@@ -18,10 +18,14 @@ import os,sys,hashlib,re
 
 """ Confirm input (very) briefly """
 if len(sys.argv) != 3:
-    print "You're doing something wrong.\nUsage: %s dir1 dir1" % sys.argv[0]
+    print "You're doing something wrong.\nUsage: %s dir1 dir2" % sys.argv[0]
     exit(2)
 
 (onedir, twodir) = sys.argv[1], sys.argv[2]
+if re.search("\\\\$", onedir) != None:
+    onedir = onedir + "\\"
+if re.search("\\\\$", twodir) != None:
+    twodir = twodir + "\\"
 
 def sumfile(fobj):
     '''Returns an md5 hash for an object with read() method.'''
