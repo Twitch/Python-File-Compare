@@ -21,6 +21,8 @@ if len(sys.argv) != 3:
     print "You're doing something wrong.\nUsage: %s dir1 dir2" % sys.argv[0]
     exit(2)
 
+# Pad/escape input. This is weak for now, any even number of terminating
+# slashes still causes problems.
 (onedir, twodir) = sys.argv[1], sys.argv[2]
 if re.search("\\\\$", onedir) != None:
     onedir = onedir + "\\"
