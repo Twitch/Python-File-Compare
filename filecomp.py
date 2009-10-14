@@ -46,30 +46,34 @@ def md5sum(fname):
         f.close()
     return ret
 
+""" Abandon all hope, ye who enter here """
+
 def walkdirs(dir1, dir2):
     dirsa = []
     dirsb = []
-    ''' Walk directories and build list of similar structures. '''
 
+    ''' Walk directories and build list of similar structures. '''
     # First, fetch a list of directories to compare.
 
-    for directory in os.walk(onedir):
-        relativedirname = "/" + re.sub(onedir, "", directory[0])
-        dirsa.append(relativedirname)
+    for directory in os.walk(dir1):
+        relativedirname = "/" + re.sub(dir1, "", directory[0])
+        if relativedirname != "/":
+            dirsa.append(relativedirname)
     
-    for directory in os.walk(twodir):
-        relativedirname = "/" + re.sub(twodir, "", directory[0])
-        dirsb.append(relativedirname)
+    for directory in os.walk(dir2):
+        relativedirname = "/" + re.sub(dir2, "", directory[0])
+        if relativedirname != "/":
+            dirsb.append(relativedirname)
 
-    # Then compare and return matches for further inspection.
-    likedirectories = set(dirsa).intersection(set(dirsb))
-    return likedirectories
+    # Return matches for further inspection.
+    return set(dirsa).intersection(set(dirsb))
 
 
 def complists(dir1, dir2):
+    print "#######################################"
+    print "Comparing \n%s \n%s" % (dir1, dir2)
+    print "#######################################"
     ''' List files in target directories. '''
-    print dir1
-    print dir2
     dira = []
     dirb = []
     for file in os.listdir(dir1):
@@ -92,36 +96,28 @@ def comfiles(files, onedir, twodir):
         secdir[f] = md5sum(sf)
     for x in firstdir:
         if firstdir[x] != secdir[x]:
-            print "File %s does not match!" % x
+            print "File %s in both targets but does not match!" % x
+    print "\n"
 
-def outp(datum):
+def outp(datum, fdir=onedir, sdir=twodir):
     if len(datum[0]) > 0:
-        print "------------------------------\nItems in \"%s\" and not in \"%s\":" % (onedir, twodir)
+        print "Items in \"%s\" and not in \"%s\":" % (fdir, sdir)
         for z in datum[0]:
-            print z
-        if len(datum[1]) > 0:
-            print "------------------------------\nItems in \"%s\" and not in \"%s\":" %(twodir, onedir)
-            for z in datum[1]:
-                print z
-        print "------------------------------"
+            print "   " + z
+        print "\n------------------------------"
+    if len(datum[1]) > 0:
+        print "Items in \"%s\" and not in \"%s\":" %(sdir, fdir)
+        for z in datum[1]:
+            print "   " + z
+        print "\n------------------------------"
     if len(datum[2]) > 0:
-        comfiles(datum[2], onedir, twodir)
+        comfiles(datum[2], fdir, sdir)
 
-
-print "#######################################"
-print "Comparing \n%s \n%s" % (onedir, twodir)
-print "#######################################"
 
 subdirs = walkdirs(onedir, twodir)
 setinfo = complists(onedir, twodir)
 outp(setinfo)
 
-if len(subdirs) > 0:
-    contin = raw_input("[( Recurse through sub-directories? )]")
-    if contin == "n":
-        exit(0)
-
 for subdir in subdirs:
     setinfo = complists(onedir + subdir.lstrip("/"), twodir + subdir.lstrip("/"))
-    outp(setinfo)
-
+    outp(setinfo, onedir + subdir.lstrip("/"), twodir + subdir.lstrip("/"))
