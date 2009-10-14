@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os,sys,hashlib
+import os,sys,hashlib,re
 
 """
 /*********************************\
@@ -47,31 +47,26 @@ def md5sum(fname):
     return ret
 
 def complists(dir1, dir2):
-    dirsa = {}
-    dirsb = {}
+    dirsa = []
+    dirsb = []
     ''' List files in target directories. '''
-    for directory in os.walk(onedir):
-        fileindir = []
-        for file in directory:
-            fileindir.append(file)
-        dirsa[directory[0]] = fileindir
-    
-    for directory in os.walk(twodir):
-        fileindir = []
-        for file in directory:
-            fileindir.append(file)
-        dirsb[directory[0]] = fileindir
+
     """
     Trying to make recursion happen. So far, to no avail.
     """
-    print dirsa.keys()
+    # First, fetch a list of directories to compare.
 
-    print set(dirsa.keys()).intersection(set(dirsb.keys()))
+    for directory in os.walk(onedir):
+        relativedirname = "/" + re.sub(onedir, "", directory[0])
+        dirsa.append(relativedirname)
     
-    exit(0)
-    dirsin1 = set(path1[1]).difference(set(path2[1]))
-    print dirsin1
-    exit(0)
+    for directory in os.walk(twodir):
+        relativedirname = "/" + re.sub(twodir, "", directory[0])
+        dirsb.append(relativedirname)
+
+    # Then compare and return matches for further inspection.
+    likedirectories = set(dirsa).intersection(set(dirsb))
+    
     ''' Compare files and display disparities. '''
     indir1 = set(dira).difference(set(dirb))
     indir2 = set(dirb).difference(set(dira))
