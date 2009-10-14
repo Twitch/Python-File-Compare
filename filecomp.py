@@ -46,14 +46,11 @@ def md5sum(fname):
         f.close()
     return ret
 
-def complists(dir1, dir2):
+def walkdirs(dir1, dir2):
     dirsa = []
     dirsb = []
-    ''' List files in target directories. '''
+    ''' Walk directories and build list of similar structures. '''
 
-    """
-    Trying to make recursion happen. So far, to no avail.
-    """
     # First, fetch a list of directories to compare.
 
     for directory in os.walk(onedir):
@@ -66,14 +63,21 @@ def complists(dir1, dir2):
 
     # Then compare and return matches for further inspection.
     likedirectories = set(dirsa).intersection(set(dirsb))
-    
-    ''' Compare files and display disparities. '''
+    return likedirectories
+
+
+def complists(dir1, dir2):
+    ''' List files in target directories. '''
+    print dir1
+    print dir2
     dira = []
     dirb = []
     for file in os.listdir(dir1):
         dira.append(file)
     for file in os.listdir(dir2):
         dirb.append(file)
+
+    ''' Compare files and display disparities. '''
     indir1 = set(dira).difference(set(dirb))
     indir2 = set(dirb).difference(set(dira))
     return (indir1, indir2, set(dira).intersection(set(dirb)))
@@ -90,20 +94,34 @@ def comfiles(files, onedir, twodir):
         if firstdir[x] != secdir[x]:
             print "File %s does not match!" % x
 
+def outp(datum):
+    if len(datum[0]) > 0:
+        print "------------------------------\nItems in \"%s\" and not in \"%s\":" % (onedir, twodir)
+        for z in datum[0]:
+            print z
+        if len(datum[1]) > 0:
+            print "------------------------------\nItems in \"%s\" and not in \"%s\":" %(twodir, onedir)
+            for z in datum[1]:
+                print z
+        print "------------------------------"
+    if len(datum[2]) > 0:
+        comfiles(datum[2], onedir, twodir)
+
+
 print "#######################################"
 print "Comparing \n%s \n%s" % (onedir, twodir)
 print "#######################################"
 
+subdirs = walkdirs(onedir, twodir)
 setinfo = complists(onedir, twodir)
-if len(setinfo[0]) > 0:
-    print "------------------------------\nItems in \"%s\" and not in \"%s\":" % (onedir, twodir)
-    for z in setinfo[0]:
-            print z
-    if len(setinfo[1]) > 0:
-        print "------------------------------\nItems in \"%s\" and not in \"%s\":" %(twodir, onedir)
-        for z in setinfo[1]:
-            print z
-    print "------------------------------"
-    
-if len(setinfo[2]) > 0:
-       comfiles(setinfo[2], onedir, twodir)
+outp(setinfo)
+
+if len(subdirs) > 0:
+    contin = raw_input("[( Recurse through sub-directories? )]")
+    if contin == "n":
+        exit(0)
+
+for subdir in subdirs:
+    setinfo = complists(onedir + subdir.lstrip("/"), twodir + subdir.lstrip("/"))
+    outp(setinfo)
+
