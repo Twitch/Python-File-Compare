@@ -9,10 +9,9 @@ import os,sys,hashlib,re
       and/or mismatched files
        (based upon md5sums).
 
-      Currently a bit sloppy
-       and lacks recursion.
+      Currently a bit sloppy.
 
-     Written by Benjamin.Sauls
+     Written by Twitch(Ben)
 \*********************************/
 """
 
