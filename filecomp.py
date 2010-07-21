@@ -74,7 +74,6 @@ def walkdirs(dir1, dir2):
     # Return matches for further inspection.
     return set(dirsa).intersection(set(dirsb))
 
-
 def complists(dir1, dir2):
     print "#######################################"
     print "Comparing \n%s \n%s" % (dir1, dir2)
@@ -96,8 +95,8 @@ def comfiles(files, onedir, twodir):
     firstdir = {}
     secdir = {}
     for f in files:
-        of = onedir + "\\" + f
-        sf = twodir + "\\" + f
+        of = onedir + "/" + f
+        sf = twodir + "/" + f
         firstdir[f] = md5sum(of)
         secdir[f] = md5sum(sf)
     for x in firstdir:
