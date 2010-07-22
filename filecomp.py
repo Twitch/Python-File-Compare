@@ -20,13 +20,7 @@ if len(sys.argv) != 3:
     print "You're doing something wrong.\nUsage: %s dir1 dir2" % sys.argv[0]
     exit(2)
 
-# Pad/escape input. This is weak for now, any even number of terminating
-# slashes still causes problems.
 (onedir, twodir) = sys.argv[1], sys.argv[2]
-if re.search("\\\\$", onedir) != None:
-    onedir = onedir + "\\"
-if re.search("\\\\$", twodir) != None:
-    twodir = twodir + "\\"
 
 def sumfile(fobj):
 	'''Returns an md5 hash for an object with read() method.'''
@@ -58,8 +52,7 @@ def walkdirs(dir1, dir2):
 	dirsb = []
 
 	''' Walk directories and build list of similar structures. '''
-	# First, fetch a list of directories to compare.
-
+	''' This creates relative names for the sub-directories and adds them to the list. '''
 	for directory in os.walk(dir1):
 		relativedirname = "/" + re.sub(dir1, "", directory[0])
 		if relativedirname != "/":
@@ -93,7 +86,7 @@ def complists(dir1, dir2):
 	return (indir1, indir2, set(dira).intersection(set(dirb)))
 
 def comfiles(files, onedir, twodir):
-	# Compare files which appear in both directories.
+	''' Compare files which appear in both directories. '''
 	firstdir = {}
 	secdir = {}
 	# Create an absolute path to them from the relative filename and get the md5.
@@ -127,11 +120,9 @@ def outp(datum, fdir=onedir, sdir=twodir):
 	if len(datum[2]) > 0:
 		comfiles(datum[2], fdir, sdir)
 
-
 subdirs = walkdirs(onedir, twodir)
 setinfo = complists(onedir, twodir)
 outp(setinfo)
-
 for subdir in subdirs:
-    setinfo = complists(onedir + subdir.lstrip("/"), twodir + subdir.lstrip("/"))
-    outp(setinfo, onedir + subdir.lstrip("/"), twodir + subdir.lstrip("/"))
+    setinfo = complists(onedir + subdir, twodir + subdir)
+    outp(setinfo, onedir + subdir, twodir + subdir)
