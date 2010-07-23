@@ -7,7 +7,7 @@ import os,sys,hashlib,re
      Will compare files in two
       directories for missing
       and/or mismatched files
-       (based upon md5sums).
+       (based on md5sums).
 
       Currently a bit sloppy.
 
