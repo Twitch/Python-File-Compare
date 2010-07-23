@@ -22,6 +22,17 @@ if len(sys.argv) != 3:
 
 (onedir, twodir) = sys.argv[1], sys.argv[2]
 
+
+''' Determine OS type and use appropriate path seperator. '''
+if os.name == "posix":
+	pathsep = "/"
+elif os.name == "nt":
+	pathsep = "\\"
+else:
+	print "I haven't the faintest idea what operating system you have run me on, but I have no intentions of attempting to work under these conditions!"
+	exit(2)
+
+
 def sumfile(fobj):
 	'''Returns an md5 hash for an object with read() method.'''
 	m = hashlib.md5()
@@ -54,13 +65,13 @@ def walkdirs(dir1, dir2):
 	''' Walk directories and build list of similar structures. '''
 	''' This creates relative names for the sub-directories and adds them to the list. '''
 	for directory in os.walk(dir1):
-		relativedirname = "/" + re.sub(dir1, "", directory[0])
-		if relativedirname != "/":
+		relativedirname = pathsep + re.sub(dir1, "", directory[0])
+		if relativedirname != pathsep:
 			dirsa.append(relativedirname)
     
 	for directory in os.walk(dir2):
-		relativedirname = "/" + re.sub(dir2, "", directory[0])
-		if relativedirname != "/":
+		relativedirname = pathsep + re.sub(dir2, "", directory[0])
+		if relativedirname != pathsep:
 			dirsb.append(relativedirname)
 
 	# Return matches for further inspection.
@@ -91,8 +102,8 @@ def comfiles(files, onedir, twodir):
 	secdir = {}
 	# Create an absolute path to them from the relative filename and get the md5.
 	for f in files:
-		of = onedir + "/" + f
-		sf = twodir + "/" + f
+		of = onedir + pathsep + f
+		sf = twodir + pathsep + f
 		firstdir[f] = md5sum(of)
 		secdir[f] = md5sum(sf)
 	for x in firstdir:
@@ -123,6 +134,9 @@ def outp(datum, fdir=onedir, sdir=twodir):
 subdirs = walkdirs(onedir, twodir)
 setinfo = complists(onedir, twodir)
 outp(setinfo)
+
+# Perform recursion through directories returned by the walkdirs() function.
+
 for subdir in subdirs:
     setinfo = complists(onedir + subdir, twodir + subdir)
     outp(setinfo, onedir + subdir, twodir + subdir)
