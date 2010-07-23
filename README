@@ -8,7 +8,7 @@
       Currently a bit sloppy
        and lacks recursion.
 
-     Written by Benjamin.Sauls
+     Written by Twitch(Ben) 
 \*********************************/
 
 This is a very small, as of yet, utility to compare the contents of a pair of directories. This became necessary when managing archived files with their originals and is likely quite useful for managing files/data across multiple systems (without using something overly complex like git/svn/cvs).
@@ -18,3 +18,6 @@ Recursion is now in place, though not exceedingly well tested.
 2010-07-21
 
    Picked up some touch-ups again. This now runs against UNIX files (i.e. '/' vs. '\')  rather than FAT paths. I should try to fix this to do both soon. I can borrow some code from another project I did something similar in.
+
+2010-07-23
+	Fixed the shebang to run in both environments and added os.name checks to use a pathsep so that this will run in *nix and Windows environments.
